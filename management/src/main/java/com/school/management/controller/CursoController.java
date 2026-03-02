@@ -32,6 +32,18 @@ public class CursoController {
         return ResponseEntity.ok(cursoService.save(cursoResquestDTO));
     }
 
-   // @PutMapping("")
+    @PutMapping("/{id}")
+    public ResponseEntity<CursoResponseDTO> update(
+            @RequestBody CursoResquestDTO cursoResquestDTO,
+            @PathVariable Long id
+    ){
+        return ResponseEntity.ok(cursoService.update(cursoResquestDTO, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        cursoService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

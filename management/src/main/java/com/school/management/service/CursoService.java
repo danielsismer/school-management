@@ -42,4 +42,25 @@ public class CursoService {
                 .orElseThrow();
 
     }
+
+    public CursoResponseDTO update(CursoResquestDTO cursoResquestDTO, Long id) {
+
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado"));
+
+        curso.setCodigo(cursoResquestDTO.codigo());
+        curso.setNome(cursoResquestDTO.nome());
+
+        return Optional.of(cursoRepository.save(curso))
+                .map(cursoMapper::toResponse)
+                .orElseThrow();
+
+    }
+
+    public void deleteById(Long id) {
+        if(!cursoRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado!!!");
+        }
+        cursoRepository.deleteById(id);
+    }
 }
