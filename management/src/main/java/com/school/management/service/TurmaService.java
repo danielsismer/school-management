@@ -23,24 +23,28 @@ public class TurmaService {
     private final TurmaRepository turmaRespository;
 
     public List<TurmaResponseDTO> listAll() {
+
+        List<Turma> turmas = turmaRespository.findAll();
+
         return turmaRespository.findAll()
                 .stream()
-                .map(turmaMapper::toResponse)
+                .map(turma -> turmaMapper.toResponse(turma, turmaRespository.findProfessoresByCursoId(turma.getId())))
                 .toList();
     }
 
 
     public TurmaResponseDTO findById(Long id) {
         return turmaRespository.findById(id)
-                .map(turmaMapper::toResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Turma não encontrada"));
+                .map(turma -> turmaMapper.toResponse(turma, turmaRespository.findProfessoresByCursoId(turma.getId())))
+                .orElseThrow();
     }
 
 
     public TurmaResponseDTO save(TurmaRequestDTO turmaRequestDTO) {
         Turma turma = turmaMapper.toEntity(turmaRequestDTO);
+
         return Optional.of(turmaRespository.save(turma))
-                .map(turmaMapper::toResponse)
+                .map(turmaRsponse -> turmaMapper.toResponse(turmaRsponse, turmaRespository.findProfessoresByCursoId(turmaRsponse.getId())))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
     }
@@ -54,7 +58,7 @@ public class TurmaService {
         turma.setProfessor(turmaRequestDTO.professor());
 
         return Optional.of(turmaRespository.save(turma))
-                .map(turmaMapper::toResponse)
+                .map(turmaResponse -> turmaMapper.toResponse(turmaResponse, turmaRespository.findProfessoresByCursoId(turma.getId())))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
 
     }

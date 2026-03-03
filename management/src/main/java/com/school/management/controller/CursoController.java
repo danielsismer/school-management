@@ -42,7 +42,7 @@ public class CursoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        cursoService.deleteById(id);
+            cursoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
