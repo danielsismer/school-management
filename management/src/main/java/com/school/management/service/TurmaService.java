@@ -24,8 +24,6 @@ public class TurmaService {
 
     public List<TurmaResponseDTO> listAll() {
 
-        List<Turma> turmas = turmaRespository.findAll();
-
         return turmaRespository.findAll()
                 .stream()
                 .map(turma -> turmaMapper.toResponse(turma, turmaRespository.findProfessoresByCursoId(turma.getId())))
