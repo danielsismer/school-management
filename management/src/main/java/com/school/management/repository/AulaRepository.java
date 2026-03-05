@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AulaRepository extends JpaRepository<Aula, Long> {
 
-    @Query("SELECT a.turma_id FROM aula a WHERE a.id = :aula_id")
-    String findTurmaByAula(@Param("aula_id") Long id);
+    @Query("SELECT a.turma_id FROM Aula a WHERE a.id = :aula_id")
+    Turma findTurmaByAula(@Param("aula_id") Long aula_id);
 
 }

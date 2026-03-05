@@ -6,24 +6,21 @@ import com.school.management.domain.model.Curso;
 import com.school.management.domain.model.Professor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class CursoMapper {
 
-    public CursoResponseDTO toResponse(Curso curso, List<Professor> professores) {
+    public CursoResponseDTO toResponse(Curso curso) {
 
         if (curso == null) return null;
-
-        List<String> nomesProfessores = professores.stream()
-                .map(Professor::getNome)
-                .toList();
 
         return new CursoResponseDTO(
                 curso.getId(),
                 curso.getNome(),
                 curso.getCodigo(),
-                nomesProfessores
+                new ArrayList<>()
         );
     }
 

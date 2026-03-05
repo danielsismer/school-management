@@ -23,7 +23,7 @@ public class Aula {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "turma_id", nullable = false)
-    private Long turma_id;
+    private Turma turma_id;
 
     @Column(name = "data_hora", nullable = false)
     private LocalDateTime data_hora;
@@ -32,7 +32,7 @@ public class Aula {
     private String assunto;
 
 
-    public Aula(Long turma_id, LocalDateTime data_hora, String assunto) {
+    public Aula(Turma turma_id, LocalDateTime data_hora, String assunto) {
         this.turma_id = turma_id;
         this.data_hora = data_hora;
         this.assunto = assunto;

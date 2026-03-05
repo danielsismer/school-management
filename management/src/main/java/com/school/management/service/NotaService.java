@@ -17,28 +17,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotaService {
 
-    private NotaRepository notaRepository;
-    private NotaMapper notaMapper;
+    private final NotaRepository notaRepository;
+    private final NotaMapper notaMapper;
 
 
     public List<NotaResponseDTO> findAll() {
         return notaRepository.findAll()
                 .stream()
-                .map(notaResponse -> notaMapper.toResponse(
-                        notaResponse,
-                        notaRepository.findNomeAlunoById(notaResponse.getAluno_id()),
-                        notaRepository.findAssuntoByAulaId(notaResponse.getAula_id())
-                ))
+                .map(notaMapper::toResponse)
                 .toList();
     }
 
     public NotaResponseDTO findById(Long id) {
         return notaRepository.findById(id)
-                .map(notaResponse -> notaMapper.toResponse(
-                        notaResponse,
-                        notaRepository.findNomeAlunoById(notaResponse.getAluno_id()),
-                        notaRepository.findAssuntoByAulaId(notaResponse.getAula_id())
-                ))
+                .map(notaMapper::toResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
@@ -47,11 +39,7 @@ public class NotaService {
         Nota nota = notaMapper.toEntity(notaRequestDTO);
 
         return Optional.of(notaRepository.save(nota))
-                .map(notaResponse -> notaMapper.toResponse(
-                        notaResponse,
-                        notaRepository.findNomeAlunoById(notaResponse.getAluno_id()),
-                        notaRepository.findAssuntoByAulaId(notaResponse.getAula_id())
-                ))
+                .map(notaMapper::toResponse)
                 .orElseThrow();
     }
 
@@ -65,11 +53,7 @@ public class NotaService {
         nota.setId(id);
 
         return Optional.of(notaRepository.save(nota))
-                .map(notaResponse -> notaMapper.toResponse(
-                        notaResponse,
-                        notaRepository.findNomeAlunoById(notaResponse.getAluno_id()),
-                        notaRepository.findAssuntoByAulaId(notaResponse.getAula_id())
-                ))
+                .map(notaMapper::toResponse)
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.CONFLICT));
 
     }

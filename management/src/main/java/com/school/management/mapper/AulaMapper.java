@@ -3,6 +3,7 @@ package com.school.management.mapper;
 import com.school.management.domain.dto.request.AulaRequestDTO;
 import com.school.management.domain.dto.response.AulaResponseDTO;
 import com.school.management.domain.model.Aula;
+import com.school.management.domain.model.Turma;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,11 +18,12 @@ public class AulaMapper {
         );
     }
 
-    public AulaResponseDTO toResponse(Aula aula, String nome_turma) {
+    public AulaResponseDTO toResponse(Aula aula) {
+
 
         return new AulaResponseDTO(
                 aula.getId(),
-                nome_turma,
+                aula.getTurma_id().getNome(),
                 aula.getData_hora(),
                 aula.getAssunto()
         );

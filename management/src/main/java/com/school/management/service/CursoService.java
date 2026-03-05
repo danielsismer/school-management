@@ -21,16 +21,21 @@ public class CursoService {
     private final CursoRepository cursoRepository;
     private final CursoMapper cursoMapper;
 
-    public List<CursoResponseDTO> listAll() {
-
+    public List<CursoResponseDTO> findAll() {
         List<Curso> cursos = cursoRepository.findAll();
 
-        return cursos.stream()
-                .map(curso -> cursoMapper.toResponse(curso, cursoRepository.findProfessoresByCursoId(curso.getId())))
+        List<CursoResponseDTO> dtos = cursos.stream()
+                .map(cursoMapper::toResponse)
                 .toList();
+        dtos.forEach(dto -> {
+            List<String> nomes = cursoRepository.findProfessoresByCursoId(dto.getId());
+            dto.setProfessore(nomes);
+        });
+
+        return dtos;
     }
 
-    public CursoResponseDTO findById(Long id) {
+    /*public CursoResponseDTO findById(Long id) {
 
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado"));
@@ -74,5 +79,5 @@ public class CursoService {
 
             cursoRepository.deleteById(id);
 
-    }
+    }*/
 }

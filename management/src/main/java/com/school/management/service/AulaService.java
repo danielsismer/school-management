@@ -23,13 +23,13 @@ public class AulaService {
     public List<AulaResponseDTO> findAll() {
         return aulaRepository.findAll()
                 .stream()
-                .map(aula -> aulaMapper.toResponse(aula, aulaRepository.findTurmaByAula(aula.getId())))
+                .map(aulaMapper::toResponse)
                 .toList();
     }
 
     public AulaResponseDTO findById(Long id) {
         return aulaRepository.findById(id)
-                .map(aula -> aulaMapper.toResponse(aula, aulaRepository.findTurmaByAula(aula.getId())))
+                .map(aulaMapper::toResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
@@ -39,7 +39,7 @@ public class AulaService {
         Aula aula = aulaMapper.toEntity(aulaRequestDTO);
 
         return Optional.of(aulaRepository.save(aula))
-                .map(aulaResponse -> aulaMapper.toResponse(aulaResponse, aulaRepository.findTurmaByAula(aulaResponse.getId())))
+                .map(aulaMapper::toResponse)
                 .orElseThrow();
 
     }
@@ -54,7 +54,7 @@ public class AulaService {
         aula.setId(id);
 
         return Optional.of(aulaRepository.save(aula))
-                .map(aulaResponse -> aulaMapper.toResponse(aulaResponse, aulaRepository.findTurmaByAula(aulaResponse.getId())))
+                .map(aulaMapper::toResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
     }
 

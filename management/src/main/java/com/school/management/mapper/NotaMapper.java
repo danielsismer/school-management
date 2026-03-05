@@ -19,12 +19,12 @@ public class NotaMapper {
 
     }
 
-    public NotaResponseDTO toResponse(Nota nota, String nome, String assunto){
+    public NotaResponseDTO toResponse(Nota nota){
 
         return new NotaResponseDTO(
                 nota.getId(),
-                nome,
-                assunto,
+                nota.getAluno_id().getNome(),
+                nota.getAula_id().getAssunto(),
                 nota.getValor()
         );
 
