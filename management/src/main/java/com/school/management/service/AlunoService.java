@@ -61,13 +61,18 @@ public class AlunoService {
                 .orElseThrow();
     }
 
-    public void deletebyId(Long id) {
+    public String deletebyId(Long id) {
 
-        if(!alunoRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado");
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if(aluno == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         alunoRepository.deleteById(id);
+
+        return aluno.getNome();
 
     }
 }
