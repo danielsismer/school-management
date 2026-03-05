@@ -23,11 +23,20 @@ public class CursoService {
 
     public List<CursoResponseDTO> findAll() {
 
+        // todos os cursos
         List<Curso> cursos = cursoRepository.findAll();
+
+
         return cursos.stream()
                 .map(curso -> {
-                    List<String> professores = cursoRepository.findProfessoresByCursoId(curso.getId());
-                    return cursoMapper.toResponse(curso, professores);
+                    List<Professor> professores = cursoRepository.findProfessoresByCursoId(curso.getId());
+
+                    List<String> nome = professores
+                            .stream()
+                            .map(Professor::getNome)
+                            .toList();
+
+                    return cursoMapper.toResponse(curso, nome);
                 })
                 .toList();
     }
@@ -36,17 +45,30 @@ public class CursoService {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado"));
 
-        List<String> professores = cursoRepository.findProfessoresByCursoId(id);
+        List<Professor> professores = cursoRepository.findProfessoresByCursoId(id);
 
-        return cursoMapper.toResponse(curso, professores);
+        List<String> nome = professores
+                .stream()
+                .map(Professor::getNome)
+                .toList();
+
+
+        return cursoMapper.toResponse(curso, nome);
     }
 
     public CursoResponseDTO save(CursoResquestDTO cursoRequestDTO) {
         Curso curso = cursoMapper.toEntity(cursoRequestDTO);
         Curso savedCurso = cursoRepository.save(curso);
 
-        List<String> professores = cursoRepository.findProfessoresByCursoId(savedCurso.getId());
-        return cursoMapper.toResponse(savedCurso, professores);
+        List<Professor> professores = cursoRepository.findProfessoresByCursoId(savedCurso.getId());
+
+        List<String> nome = professores
+                .stream()
+                .map(Professor::getNome)
+                .toList();
+
+
+        return cursoMapper.toResponse(savedCurso, nome);
     }
 
     public CursoResponseDTO update(CursoResquestDTO cursoRequestDTO, Long id) {
@@ -58,9 +80,15 @@ public class CursoService {
         curso.setId(id);
 
         Curso updatedCurso = cursoRepository.save(curso);
-        List<String> professores = cursoRepository.findProfessoresByCursoId(id);
+        List<Professor> professores = cursoRepository.findProfessoresByCursoId(id);
 
-        return cursoMapper.toResponse(updatedCurso, professores);
+        List<String> nome = professores
+                .stream()
+                .map(Professor::getNome)
+                .toList();
+
+
+        return cursoMapper.toResponse(updatedCurso, nome);
     }
 
     public void deleteById(Long id) {

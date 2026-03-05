@@ -13,4 +13,4 @@ import java.util.List;
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
     @Query("SELECT DISTINCT t.professor FROM Turma t WHERE t.curso.id = :cursoId")
-    List<String> findProfessoresByCursoId(@Param("cursoId") Long cursoId);}
+    List<Professor> findProfessoresByCursoId(@Param("cursoId") Long cursoId);}
