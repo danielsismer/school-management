@@ -22,62 +22,51 @@ public class CursoService {
     private final CursoMapper cursoMapper;
 
     public List<CursoResponseDTO> findAll() {
+
         List<Curso> cursos = cursoRepository.findAll();
-
-        List<CursoResponseDTO> dtos = cursos.stream()
-                .map(cursoMapper::toResponse)
+        return cursos.stream()
+                .map(curso -> {
+                    List<String> professores = cursoRepository.findProfessoresByCursoId(curso.getId());
+                    return cursoMapper.toResponse(curso, professores);
+                })
                 .toList();
-        dtos.forEach(dto -> {
-            List<String> nomes = cursoRepository.findProfessoresByCursoId(dto.getId());
-            dto.setProfessore(nomes);
-        });
-
-        return dtos;
     }
 
-    /*public CursoResponseDTO findById(Long id) {
-
+    public CursoResponseDTO findById(Long id) {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado"));
 
-        List<Professor> professores = cursoRepository.findProfessoresByCursoId(curso.getId());
+        List<String> professores = cursoRepository.findProfessoresByCursoId(id);
 
         return cursoMapper.toResponse(curso, professores);
-
     }
 
-    public CursoResponseDTO save(CursoResquestDTO cursoResquestDTO) {
+    public CursoResponseDTO save(CursoResquestDTO cursoRequestDTO) {
+        Curso curso = cursoMapper.toEntity(cursoRequestDTO);
+        Curso savedCurso = cursoRepository.save(curso);
 
-        Curso curso = cursoMapper.toEntity(cursoResquestDTO);
-
-        return Optional.of(cursoRepository.save(curso))
-                .map(savedCurso -> cursoMapper.toResponse(savedCurso, cursoRepository.findProfessoresByCursoId(savedCurso.getId())))
-                .orElseThrow();
-
+        List<String> professores = cursoRepository.findProfessoresByCursoId(savedCurso.getId());
+        return cursoMapper.toResponse(savedCurso, professores);
     }
 
-    public CursoResponseDTO update(CursoResquestDTO cursoResquestDTO, Long id) {
-
-        if(!cursoRepository.existsById(id)){
+    public CursoResponseDTO update(CursoResquestDTO cursoRequestDTO, Long id) {
+        if (!cursoRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado!!!");
         }
 
-        Curso curso = cursoMapper.toEntity(cursoResquestDTO);
+        Curso curso = cursoMapper.toEntity(cursoRequestDTO);
         curso.setId(id);
 
-        return Optional.of(cursoRepository.save(curso))
-                .map(savedCurso -> cursoMapper.toResponse(savedCurso, cursoRepository.findProfessoresByCursoId(savedCurso.getId())))
-                .orElseThrow();
+        Curso updatedCurso = cursoRepository.save(curso);
+        List<String> professores = cursoRepository.findProfessoresByCursoId(id);
 
+        return cursoMapper.toResponse(updatedCurso, professores);
     }
 
     public void deleteById(Long id) {
-
-            if(!cursoRepository.existsById(id)){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado!!!");
-            }
-
-            cursoRepository.deleteById(id);
-
-    }*/
+        if (!cursoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado!!!");
+        }
+        cursoRepository.deleteById(id);
+    }
 }

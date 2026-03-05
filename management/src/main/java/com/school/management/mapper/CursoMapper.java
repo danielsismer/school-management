@@ -12,15 +12,14 @@ import java.util.List;
 @Component
 public class CursoMapper {
 
-    public CursoResponseDTO toResponse(Curso curso) {
-
+    public CursoResponseDTO toResponse(Curso curso, List<String> professores) {
         if (curso == null) return null;
 
         return new CursoResponseDTO(
                 curso.getId(),
                 curso.getNome(),
                 curso.getCodigo(),
-                new ArrayList<>()
+                professores != null ? professores : new ArrayList<>()
         );
     }
 

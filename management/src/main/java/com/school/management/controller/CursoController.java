@@ -19,7 +19,7 @@ public class CursoController {
 
     @GetMapping
     public ResponseEntity<List<CursoResponseDTO>> listAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(cursoService.listAll());
+        return ResponseEntity.status(HttpStatus.OK).body(cursoService.findAll());
     }
 
     @GetMapping("/{id}")
